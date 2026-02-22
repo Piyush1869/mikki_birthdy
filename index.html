@@ -3,20 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Happy Birthday!</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Pacifico&display=swap" rel="stylesheet">
+    <title>Happy Birthday! ✨</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Pacifico&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Poppins', sans-serif;
+        :root {
+            --primary: #ff4757;
+            --secondary: #d63384;
+            --glass: rgba(255, 255, 255, 0.2);
+            --glass-border: rgba(255, 255, 255, 0.3);
         }
 
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+
         body {
-            background: linear-gradient(45deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%);
+            background: linear-gradient(135deg, #fbc2eb 0%, #a6c1ee 100%);
             height: 100vh;
             display: flex;
             justify-content: center;
@@ -25,217 +27,218 @@
             padding: 20px;
         }
 
-        /* Glassmorphism Card Style */
+        /* Preloader */
+        #loader {
+            position: fixed;
+            inset: 0;
+            background: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s;
+        }
+
+        /* Modern Glass Card */
         .card {
-            background: rgba(255, 255, 255, 0.25);
-            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border-radius: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.18);
-            padding: 40px;
-            max-width: 500px;
+            background: var(--glass);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 35px;
+            max-width: 450px;
             width: 100%;
             text-align: center;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
             display: none;
-            opacity: 0;
-            transition: opacity 0.5s ease-in-out;
+            transform: translateY(20px);
+            transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
         .card.active {
             display: block;
             opacity: 1;
+            transform: translateY(0);
         }
 
         h1 {
             font-family: 'Pacifico', cursive;
-            color: #d63384;
-            font-size: 2.5rem;
-            margin-bottom: 20px;
+            color: var(--secondary);
+            font-size: 2.2rem;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
         }
 
         p {
-            font-size: 1.1rem;
-            color: #333;
-            line-height: 1.6;
-            margin-bottom: 30px;
-            min-height: 100px;
+            font-size: 1rem;
+            color: #2d3436;
+            line-height: 1.7;
+            margin-bottom: 25px;
+            font-weight: 400;
         }
 
         .btn {
-            background: #d63384;
+            background: var(--secondary);
             color: white;
             border: none;
-            padding: 12px 25px;
+            padding: 14px 30px;
             font-size: 1rem;
+            font-weight: 600;
             border-radius: 50px;
             cursor: pointer;
-            box-shadow: 0 4px 15px rgba(214, 51, 132, 0.4);
-            transition: transform 0.2s, background 0.2s;
+            box-shadow: 0 10px 20px rgba(214, 51, 132, 0.3);
+            transition: all 0.3s ease;
         }
 
         .btn:hover {
-            background: #b02a6c;
-            transform: scale(1.05);
-        }
-
-        /* Hidden elements initially */
-        #nextBtn1 {
-            display: none;
-            margin: 0 auto;
+            transform: scale(1.05) translateY(-2px);
+            box-shadow: 0 15px 25px rgba(214, 51, 132, 0.4);
         }
 
         .photo-container {
             position: relative;
-            margin-bottom: 20px;
+            margin: 20px 0;
+            border-radius: 15px;
+            overflow: visible;
         }
 
         .photo-container img {
-            max-width: 100%;
+            width: 100%;
             border-radius: 15px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            display: block;
         }
 
-        /* Birthday Cap Positioning */
+        /* Improved Cap Positioning */
         .cap {
             position: absolute;
-            top: -40px;
-            right: 30%;
-            width: 80px;
-            transform: rotate(15deg);
-            z-index: 10;
+            top: -45px;
+            right: 15%;
+            width: 90px !important;
+            z-index: 100;
+            filter: drop-shadow(0 5px 10px rgba(0,0,0,0.2));
+            transform: rotate(10deg);
         }
 
-        /* Pulse animation for the last button */
-        .pulse {
-            animation: pulse 1.5s infinite;
-            background: #ff4757;
-        }
+        .pulse { animation: pulseAnim 1.5s infinite; background: var(--primary); }
 
-        @keyframes pulse {
+        @keyframes pulseAnim {
             0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 71, 87, 0.7); }
-            70% { transform: scale(1.1); box-shadow: 0 0 0 15px rgba(255, 71, 87, 0); }
+            70% { transform: scale(1.05); box-shadow: 0 0 0 15px rgba(255, 71, 87, 0); }
             100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 71, 87, 0); }
         }
     </style>
 </head>
 <body>
 
-    <audio id="jaaneKyun" src="jaane_kyun.mp3" loop></audio>
-    <audio id="hbdSong" src="hbd_song.mp3"></audio>
-    <audio id="applause" src="applause.mp3"></audio>
+    <div id="loader">
+        <p>Loading magic... ✨</p>
+    </div>
+
+    <audio id="jaaneKyun" src="jaane_kyun.mp3" preload="auto"></audio>
+    <audio id="hbdSong" src="hbd_song.mp3" preload="auto"></audio>
+    <audio id="applause" src="applause.mp3" preload="auto"></audio>
 
     <div class="card active" id="card0">
-        <h1>Hey there! ✨</h1>
-        <p>We have something special for you. Ready?</p>
-        <button class="btn" onclick="startJourney()">Let's Go!</button>
+        <h1>Hey Friend! 🌸</h1>
+        <p>I’ve made something special just for you. Ready to see it?</p>
+        <button class="btn" onclick="startJourney()">Click to Start</button>
     </div>
 
     <div class="card" id="card1">
         <p id="typewriterText"></p>
-        <button class="btn" id="nextBtn1" onclick="showCard(2)">Next ❤️</button>
+        <button class="btn" id="nextBtn1" style="display:none; margin: 0 auto;" onclick="showCard(2)">Continue ❤️</button>
     </div>
 
     <div class="card" id="card2">
         <p>Jo hua hai aapke sath usko bhulna to aasan nahi hoga, but believe me aapko Aaditya jessa masti khor or mere jessa bakchod friend nahi milta... ye na hota to right? 😂<br><br>
-        Kidding yaar, I know it hurts but bhul ja sab. Hum hai na! Masti karenge, chidhayenge aapko, hasayenge and kabhi regret nahi hone denge. Hum dono hai na! 🫂</p>
-        <button class="btn" onclick="showCard(3)">Aage badho...</button>
+        Kidding yaar, I know it hurts but bhul ja sab. Hum hai na! Masti karenge, cherege aapko, hasayenge and kahi regret nahi hone denge. Hum dono hai na! 🫂</p>
+        <button class="btn" onclick="showCard(3)">Dekho idhar...</button>
     </div>
 
     <div class="card" id="card3">
         <div class="photo-container">
-            <img src="boys.jpg" alt="Your funny friends">
+            <img src="boys.jpg" alt="Friends">
         </div>
-        <p>Ye chere dekh ke has de yarrrr and khush reh bas! Rona nahi kabhi plzzzz, it's our request. 😊</p>
-        <button class="btn pulse" onclick="triggerFinal()">Fast tap on me can't control! 🚀</button>
+        <p>Ye chere dekh ke has de yarrrr and khush reh bus! Rona nahi kabhi plzzzz, its our request. 😊</p>
+        <button class="btn pulse" onclick="triggerFinal()">FAST TAP ON ME CANT CONTROL! 🚀</button>
     </div>
 
     <div class="card" id="card4">
         <h1>Happy Birthday! 🎉</h1>
         <div class="photo-container">
-            <img src="https://cdn-icons-png.flaticon.com/512/8344/8344840.png" class="cap" alt="Birthday Cap">
+            <img src="https://cdn-icons-png.flaticon.com/512/8344/8344840.png" class="cap" alt="Cap">
             <img src="miki.jpg" alt="Birthday Girl">
         </div>
-        <p>Keep smiling always! You deserve all the happiness in the world. 🎂✨</p>
+        <p>Smile please! We are always with you. Keep shining! 🎂✨</p>
     </div>
 
     <script>
-        // Texts
+        // Preloader Logic
+        window.onload = () => {
+            document.getElementById('loader').style.opacity = '0';
+            setTimeout(() => { document.getElementById('loader').style.display = 'none'; }, 500);
+        };
+
         const text1 = "I know hamari baate kam hui hai and jab hui to kalesh hi hua hai. Aaditya ka to pata nahi but haa mere se jab hua hai kalesh hi hua hai. But still aap bahut bholi ho or pyaari ho ✨";
-        let i = 0;
-        let speed = 60; // Typing speed in milliseconds
+        let charIndex = 0;
 
         function startJourney() {
-            // Hide card 0, show card 1
             document.getElementById('card0').classList.remove('active');
-            document.getElementById('card1').classList.add('active');
-            // Start typewriter
-            typeWriter();
+            setTimeout(() => {
+                document.getElementById('card1').classList.add('active');
+                typeWriter();
+            }, 300);
         }
 
         function typeWriter() {
-            if (i < text1.length) {
-                document.getElementById("typewriterText").innerHTML += text1.charAt(i);
-                i++;
-                setTimeout(typeWriter, speed);
+            if (charIndex < text1.length) {
+                document.getElementById("typewriterText").innerHTML += text1.charAt(charIndex);
+                charIndex++;
+                setTimeout(typeWriter, 50);
             } else {
-                // Show button when typing is done
                 document.getElementById("nextBtn1").style.display = "block";
             }
         }
 
-        function showCard(cardNumber) {
-            // Hide all cards
-            document.querySelectorAll('.card').forEach(card => card.classList.remove('active'));
-            // Show target card
-            document.getElementById('card' + cardNumber).classList.add('active');
-
-            // Play background song when going to Card 3 (the boys photo)
-            if (cardNumber === 3) {
-                let song = document.getElementById("jaaneKyun");
-                song.volume = 0.5; // Set volume to 50%
-                song.play().catch(e => console.log("Audio play prevented by browser"));
-            }
+        function showCard(n) {
+            document.querySelectorAll('.card').forEach(c => c.classList.remove('active'));
+            setTimeout(() => {
+                document.getElementById('card' + n).classList.add('active');
+                
+                // Music logic for Card 3 (Boys Photo)
+                if (n === 3) {
+                    let song = document.getElementById("jaaneKyun");
+                    song.currentTime = 40; // Skip first 40 seconds
+                    song.volume = 0.6;
+                    song.play();
+                }
+            }, 300);
         }
 
         function triggerFinal() {
-            // Stop previous song
-            let oldSong = document.getElementById("jaaneKyun");
-            oldSong.pause();
-            oldSong.currentTime = 0;
+            // Stop first song
+            document.getElementById("jaaneKyun").pause();
 
-            // Show final card
             showCard(4);
 
-            // Play final sounds
-            document.getElementById("hbdSong").play().catch(e => console.log("Audio error"));
-            document.getElementById("applause").play().catch(e => console.log("Audio error"));
+            // Play HBD and Applause
+            let hbd = document.getElementById("hbdSong");
+            hbd.currentTime = 17; // Skip first 17 seconds
+            hbd.play();
+            document.getElementById("applause").play();
 
-            // Confetti / Firecracker Burst 
-            var duration = 15 * 1000;
-            var animationEnd = Date.now() + duration;
-            var defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
+            // Firecracker / Confetti Effect
+            const end = Date.now() + (10 * 1000);
+            const colors = ['#ff4757', '#d63384', '#fbc2eb'];
 
-            function randomInRange(min, max) {
-                return Math.random() * (max - min) + min;
-            }
+            (function frame() {
+                confetti({ particleCount: 3, angle: 60, spread: 55, origin: { x: 0 }, colors: colors });
+                confetti({ particleCount: 3, angle: 120, spread: 55, origin: { x: 1 }, colors: colors });
 
-            var interval = setInterval(function() {
-                var timeLeft = animationEnd - Date.now();
-
-                if (timeLeft <= 0) {
-                    return clearInterval(interval);
-                }
-
-                var particleCount = 50 * (timeLeft / duration);
-                confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } }));
-                confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } }));
-            }, 250);
-            
-            // Initial big burst
-            confetti({ particleCount: 150, spread: 100, origin: { y: 0.6 } });
+                if (Date.now() < end) { requestAnimationFrame(frame); }
+            }());
         }
     </script>
 </body>
 </html>
-
