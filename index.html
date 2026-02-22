@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday!</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Pacifico&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(45deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            padding: 20px;
+        }
+
+        /* Glassmorphism Card Style */
+        .card {
+            background: rgba(255, 255, 255, 0.25);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            padding: 40px;
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+            display: none;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        .card.active {
+            display: block;
+            opacity: 1;
+        }
+
+        h1 {
+            font-family: 'Pacifico', cursive;
+            color: #d63384;
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+
+        p {
+            font-size: 1.1rem;
+            color: #333;
+            line-height: 1.6;
+            margin-bottom: 30px;
+            min-height: 100px;
+        }
+
+        .btn {
+            background: #d63384;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            font-size: 1rem;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(214, 51, 132, 0.4);
+            transition: transform 0.2s, background 0.2s;
+        }
+
+        .btn:hover {
+            background: #b02a6c;
+            transform: scale(1.05);
+        }
+
+        /* Hidden elements initially */
+        #nextBtn1 {
+            display: none;
+            margin: 0 auto;
+        }
+
+        .photo-container {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .photo-container img {
+            max-width: 100%;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        /* Birthday Cap Positioning */
+        .cap {
+            position: absolute;
+            top: -40px;
+            right: 30%;
+            width: 80px;
+            transform: rotate(15deg);
+            z-index: 10;
+        }
+
+        /* Pulse animation for the last button */
+        .pulse {
+            animation: pulse 1.5s infinite;
+            background: #ff4757;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 71, 87, 0.7); }
+            70% { transform: scale(1.1); box-shadow: 0 0 0 15px rgba(255, 71, 87, 0); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 71, 87, 0); }
+        }
+    </style>
+</head>
+<body>
+
+    <audio id="jaaneKyun" src="jaane_kyun.mp3" loop></audio>
+    <audio id="hbdSong" src="hbd_song.mp3"></audio>
+    <audio id="applause" src="applause.mp3"></audio>
+
+    <div class="card active" id="card0">
+        <h1>Hey there! ✨</h1>
+        <p>We have something special for you. Ready?</p>
+        <button class="btn" onclick="startJourney()">Let's Go!</button>
+    </div>
+
+    <div class="card" id="card1">
+        <p id="typewriterText"></p>
+        <button class="btn" id="nextBtn1" onclick="showCard(2)">Next ❤️</button>
+    </div>
+
+    <div class="card" id="card2">
+        <p>Jo hua hai aapke sath usko bhulna to aasan nahi hoga, but believe me aapko Aaditya jessa masti khor or mere jessa bakchod friend nahi milta... ye na hota to right? 😂<br><br>
+        Kidding yaar, I know it hurts but bhul ja sab. Hum hai na! Masti karenge, chidhayenge aapko, hasayenge and kabhi regret nahi hone denge. Hum dono hai na! 🫂</p>
+        <button class="btn" onclick="showCard(3)">Aage badho...</button>
+    </div>
+
+    <div class="card" id="card3">
+        <div class="photo-container">
+            <img src="boys.jpg" alt="Your funny friends">
+        </div>
+        <p>Ye chere dekh ke has de yarrrr and khush reh bas! Rona nahi kabhi plzzzz, it's our request. 😊</p>
+        <button class="btn pulse" onclick="triggerFinal()">Fast tap on me can't control! 🚀</button>
+    </div>
+
+    <div class="card" id="card4">
+        <h1>Happy Birthday! 🎉</h1>
+        <div class="photo-container">
+            <img src="https://cdn-icons-png.flaticon.com/512/8344/8344840.png" class="cap" alt="Birthday Cap">
+            <img src="miki.jpg" alt="Birthday Girl">
+        </div>
+        <p>Keep smiling always! You deserve all the happiness in the world. 🎂✨</p>
+    </div>
+
+    <script>
+        // Texts
+        const text1 = "I know hamari baate kam hui hai and jab hui to kalesh hi hua hai. Aaditya ka to pata nahi but haa mere se jab hua hai kalesh hi hua hai. But still aap bahut bholi ho or pyaari ho ✨";
+        let i = 0;
+        let speed = 60; // Typing speed in milliseconds
+
+        function startJourney() {
+            // Hide card 0, show card 1
+            document.getElementById('card0').classList.remove('active');
+            document.getElementById('card1').classList.add('active');
+            // Start typewriter
+            typeWriter();
+        }
+
+        function typeWriter() {
+            if (i < text1.length) {
+                document.getElementById("typewriterText").innerHTML += text1.charAt(i);
+                i++;
+                setTimeout(typeWriter, speed);
+            } else {
+                // Show button when typing is done
+                document.getElementById("nextBtn1").style.display = "block";
+            }
+        }
+
+        function showCard(cardNumber) {
+            // Hide all cards
+            document.querySelectorAll('.card').forEach(card => card.classList.remove('active'));
+            // Show target card
+            document.getElementById('card' + cardNumber).classList.add('active');
+
+            // Play background song when going to Card 3 (the boys photo)
+            if (cardNumber === 3) {
+                let song = document.getElementById("jaaneKyun");
+                song.volume = 0.5; // Set volume to 50%
+                song.play().catch(e => console.log("Audio play prevented by browser"));
+            }
+        }
+
+        function triggerFinal() {
+            // Stop previous song
+            let oldSong = document.getElementById("jaaneKyun");
+            oldSong.pause();
+            oldSong.currentTime = 0;
+
+            // Show final card
+            showCard(4);
+
+            // Play final sounds
+            document.getElementById("hbdSong").play().catch(e => console.log("Audio error"));
+            document.getElementById("applause").play().catch(e => console.log("Audio error"));
+
+            // Confetti / Firecracker Burst 
+            var duration = 15 * 1000;
+            var animationEnd = Date.now() + duration;
+            var defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
+
+            function randomInRange(min, max) {
+                return Math.random() * (max - min) + min;
+            }
+
+            var interval = setInterval(function() {
+                var timeLeft = animationEnd - Date.now();
+
+                if (timeLeft <= 0) {
+                    return clearInterval(interval);
+                }
+
+                var particleCount = 50 * (timeLeft / duration);
+                confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } }));
+                confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } }));
+            }, 250);
+            
+            // Initial big burst
+            confetti({ particleCount: 150, spread: 100, origin: { y: 0.6 } });
+        }
+    </script>
+</body>
+</html>
+
