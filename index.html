@@ -27,7 +27,7 @@
             padding: 20px;
         }
 
-        /* Preloader */
+        /* Loader */
         #loader {
             position: fixed;
             inset: 0;
@@ -39,7 +39,6 @@
             transition: opacity 0.5s;
         }
 
-        /* Modern Glass Card */
         .card {
             background: var(--glass);
             backdrop-filter: blur(15px);
@@ -67,7 +66,6 @@
             color: var(--secondary);
             font-size: 2.2rem;
             margin-bottom: 15px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
         }
 
         p {
@@ -75,7 +73,6 @@
             color: #2d3436;
             line-height: 1.7;
             margin-bottom: 25px;
-            font-weight: 400;
         }
 
         .btn {
@@ -91,25 +88,11 @@
             transition: all 0.3s ease;
         }
 
-        .btn:hover {
-            transform: scale(1.05) translateY(-2px);
-            box-shadow: 0 15px 25px rgba(214, 51, 132, 0.4);
-        }
+        .btn:hover { transform: scale(1.05) translateY(-2px); }
 
-        .photo-container {
-            position: relative;
-            margin: 20px 0;
-            border-radius: 15px;
-            overflow: visible;
-        }
+        .photo-container { position: relative; margin: 20px 0; border-radius: 15px; }
+        .photo-container img { width: 100%; border-radius: 15px; display: block; }
 
-        .photo-container img {
-            width: 100%;
-            border-radius: 15px;
-            display: block;
-        }
-
-        /* Improved Cap Positioning */
         .cap {
             position: absolute;
             top: -45px;
@@ -121,7 +104,6 @@
         }
 
         .pulse { animation: pulseAnim 1.5s infinite; background: var(--primary); }
-
         @keyframes pulseAnim {
             0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 71, 87, 0.7); }
             70% { transform: scale(1.05); box-shadow: 0 0 0 15px rgba(255, 71, 87, 0); }
@@ -131,9 +113,7 @@
 </head>
 <body>
 
-    <div id="loader">
-        <p>Loading magic... ✨</p>
-    </div>
+    <div id="loader"><p>Loading magic... ✨</p></div>
 
     <audio id="jaaneKyun" src="jaane_kyun.mp3" preload="auto"></audio>
     <audio id="hbdSong" src="hbd_song.mp3" preload="auto"></audio>
@@ -174,7 +154,6 @@
     </div>
 
     <script>
-        // Preloader Logic
         window.onload = () => {
             document.getElementById('loader').style.opacity = '0';
             setTimeout(() => { document.getElementById('loader').style.display = 'none'; }, 500);
@@ -184,6 +163,12 @@
         let charIndex = 0;
 
         function startJourney() {
+            // PLAY SONG IMMEDIATELY ON FIRST CLICK
+            let song = document.getElementById("jaaneKyun");
+            song.currentTime = 40; // Skipping first 40 seconds
+            song.volume = 0.5;
+            song.play();
+
             document.getElementById('card0').classList.remove('active');
             setTimeout(() => {
                 document.getElementById('card1').classList.add('active');
@@ -195,7 +180,7 @@
             if (charIndex < text1.length) {
                 document.getElementById("typewriterText").innerHTML += text1.charAt(charIndex);
                 charIndex++;
-                setTimeout(typeWriter, 50);
+                setTimeout(typeWriter, 55);
             } else {
                 document.getElementById("nextBtn1").style.display = "block";
             }
@@ -205,40 +190,30 @@
             document.querySelectorAll('.card').forEach(c => c.classList.remove('active'));
             setTimeout(() => {
                 document.getElementById('card' + n).classList.add('active');
-                
-                // Music logic for Card 3 (Boys Photo)
-                if (n === 3) {
-                    let song = document.getElementById("jaaneKyun");
-                    song.currentTime = 40; // Skip first 40 seconds
-                    song.volume = 0.6;
-                    song.play();
-                }
             }, 300);
         }
 
         function triggerFinal() {
-            // Stop first song
+            // Stop previous song
             document.getElementById("jaaneKyun").pause();
 
             showCard(4);
 
-            // Play HBD and Applause
+            // Play HBD Song and Clapping
             let hbd = document.getElementById("hbdSong");
-            hbd.currentTime = 17; // Skip first 17 seconds
+            hbd.currentTime = 17; // Skipping first 17 seconds
             hbd.play();
             document.getElementById("applause").play();
 
-            // Firecracker / Confetti Effect
-            const end = Date.now() + (10 * 1000);
-            const colors = ['#ff4757', '#d63384', '#fbc2eb'];
-
+            // Firecrackers / Confetti
+            const end = Date.now() + (12 * 1000);
             (function frame() {
-                confetti({ particleCount: 3, angle: 60, spread: 55, origin: { x: 0 }, colors: colors });
-                confetti({ particleCount: 3, angle: 120, spread: 55, origin: { x: 1 }, colors: colors });
-
+                confetti({ particleCount: 4, angle: 60, spread: 55, origin: { x: 0 } });
+                confetti({ particleCount: 4, angle: 120, spread: 55, origin: { x: 1 } });
                 if (Date.now() < end) { requestAnimationFrame(frame); }
             }());
         }
     </script>
 </body>
 </html>
+ 
